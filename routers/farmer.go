@@ -20,7 +20,6 @@ func Root(c *gin.Context) {
 func LoginService(c *gin.Context) {
 	num := c.Param("contact_num")
 	c1 := make(chan string)
-	time.Sleep(10 * time.Second)
 	go func() {
 		user := db.Exists(num)
 		if user {
