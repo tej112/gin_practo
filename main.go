@@ -8,9 +8,9 @@ import (
 )
 
 func main() {
+	// gin.SetMode(gin.ReleaseMode)
 	app := gin.Default()
-	res := db.PrepareDB()
-	print(res)
+	db.PrepareDB()
 	app.GET("/", routers.Root)
 	farmer := app.Group("/api/v1")
 	farmer.GET("/loginservice/:contact_num", routers.LoginService)

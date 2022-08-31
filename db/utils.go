@@ -6,6 +6,7 @@ import (
 	"log"
 	"main/models"
 
+	"github.com/go-redis/redis"
 	redigo "github.com/gomodule/redigo/redis"
 	"github.com/nitishm/go-rejson"
 )
@@ -13,23 +14,20 @@ import (
 var farmerDB = GetConn()
 var rh = rejson.NewReJSONHandler()
 
-func Exists(key string) bool {
-	res, _ := farmerDB.SIsMember("users:farmer", key).Result()
-	return res
+func Exists(key string) *redis.BoolCmd {
+	return farmerDB.SIsMember("users:farmer", key)
 }
 
-func HashOfFarmer(key string) map[string]string {
-	res, _ := farmerDB.HGetAll(key).Result()
-	return res
+func HashOfFarmer(key string) *redis.StringStringMapCmd {
+	return farmerDB.HGetAll(key)
 }
 
-func ValueForField(key string, field string) string {
-	res, _ := farmerDB.HGet(key, field).Result()
-	// fmt.Println(res, err)
-	return res
+func ValueForField(key string, field string) *redis.StringCmd {
+	return farmerDB.HGet(key, field)
 }
 
 func GetFarmer(key string) interface{} {
+
 	rh.SetGoRedisClient(farmerDB)
 	studentJSON, err := redigo.Bytes(rh.JSONGet(":farmer_data_model.Farmer:"+key, "."))
 	if err != nil {
